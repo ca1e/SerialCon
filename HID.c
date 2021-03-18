@@ -8,7 +8,7 @@ void HID_Init(void) {
 }
 
 void HID_Task(void) {
-    ReportTask();
+    Report_Task();
     USB_USBTask();
 }
 
@@ -73,7 +73,7 @@ void EVENT_USB_Device_ControlRequest(void) {
 }
 
 // Process and deliver data from IN and OUT endpoints.
-void ReportTask(void) {
+void Report_Task(void) {
   // If the device isn't connected and properly configured, we can't do anything here.
   if (USB_DeviceState != DEVICE_STATE_Configured)
     return;

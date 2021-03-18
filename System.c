@@ -24,12 +24,12 @@ void SystemInit(void)
     // We need to disable clock division before initializing the USB hardware.
     clock_prescale_set(clock_div_1);
 
-    // Initialize timer interrupt
+    // Initialize timer0 interrupt
     TIMSK0 |= (1 << TOIE0);
-    //enable interrupts
-    sei();
     // set prescaler to 64 and start the timer
     TCCR0B |= (1 << CS01) | (1 << CS00);
+    //enable interrupts
+    sei();
 
     GlobalInterruptEnable();
 }

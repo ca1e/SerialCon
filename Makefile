@@ -32,6 +32,7 @@ F_USB        = $(F_CPU)
 OPTIMIZATION = s
 TARGET       = ./$(REAL_BOARD)/$(REAL_BOARD)
 SRC         += Joystick.c LUFADescriptors.c
+SRC			+= HID.c System.c
 SRC			+= $(LUFA_SRC_USB)
 LUFA_PATH    = ./lufa/LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -DMEM_SIZE=$(MEM_SIZE) -IConfig $(SETTINGS)

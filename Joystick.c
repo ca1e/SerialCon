@@ -31,6 +31,6 @@ int main(void)
         if(true) { // tick tock 1ms
             // AppTick();
         }
-        HIDTask();
+        HID_Task();
     }
 }
