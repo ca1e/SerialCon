@@ -1,10 +1,11 @@
 #ifndef HID_H_
 #define HID_H_
 
+#include "LUFADescriptors.h"
+
 #include <LUFA/Drivers/USB/USB.h>
 #include <LUFA/Drivers/Peripheral/Serial.h>
-
-#include "LUFADescriptors.h"
+#include <LUFA/Platform/Platform.h>
 
 // Type Defines
 // Enumeration for joystick buttons.

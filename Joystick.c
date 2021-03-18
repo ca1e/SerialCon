@@ -20,17 +20,27 @@ these buttons for our use.
 
 #include "Joystick.h"
 
+volatile uint8_t tick1000ms = 0;
+
 int main(void)
 {
     SystemInit();
     // The USB stack should be initialized last.
     HID_Init();
  
-    for(;;)
+    while(1)
     {
-        if(true) { // tick tock 1ms
-            // AppTick();
+        if(SystemTick1ms()) { // tick tock 1ms
+            tick1000ms++;
+        }
+        if(tick1000ms == 500) {
+            LEDs_TurnOffLEDs(LEDS_LED2);
+        }
+        if(tick1000ms == 1000) {
+            tick1000ms = 0;
+            LEDs_TurnOnLEDs(LEDS_LED2);
         }
         HID_Task();
+        //ApplicationTask();
     }
 }

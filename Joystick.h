@@ -36,13 +36,7 @@
 #ifndef _JOYSTICK_H_
 #define _JOYSTICK_H_
 
-#include <string.h>
-#include <stdlib.h>
-
-#include <avr/eeprom.h>
-
-#include <LUFA/Drivers/Board/LEDs.h>
-
+#include "Common.h"
 #include "System.h"
 #include "HID.h"
 

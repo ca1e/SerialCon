@@ -7,9 +7,12 @@
 #include <avr/pgmspace.h>
 #include <avr/power.h>
 
-#include <LUFA/Drivers/Peripheral/Serial.h>
+#include <stdbool.h>
+
 #include <LUFA/Platform/Platform.h>
 
 void SystemInit(void);
+void SystemInterruptInit(void);
+bool SystemTick1ms(void);
 
 #endif
