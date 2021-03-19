@@ -8,7 +8,6 @@
 #include <avr/power.h>
 
 #include <stdbool.h>
-
 #include <LUFA/Platform/Platform.h>
 
 void SystemInit(void);

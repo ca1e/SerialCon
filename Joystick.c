@@ -20,26 +20,28 @@ these buttons for our use.
 
 #include "Joystick.h"
 
-volatile uint8_t tick1000ms = 0;
+volatile uint16_t tick1000ms = 0;
 
 int main(void)
 {
     SystemInit();
+    // Initialize LEDs.
+    LEDs_Init();
     // The USB stack should be initialized last.
     HID_Init();
- 
+
     while(1)
     {
         if(SystemTick1ms()) { // tick tock 1ms
             tick1000ms++;
+            if(tick1000ms == 50) {
+                LEDs_TurnOnLEDs(LEDMASK_TX);
+            }else if(tick1000ms == 500) {
+                LEDs_TurnOffLEDs(LEDMASK_TX);
+                tick1000ms = 0;
+            }
         }
-        if(tick1000ms == 500) {
-            LEDs_TurnOffLEDs(LEDS_LED2);
-        }
-        if(tick1000ms == 1000) {
-            tick1000ms = 0;
-            LEDs_TurnOnLEDs(LEDS_LED2);
-        }
+
         HID_Task();
         //ApplicationTask();
     }
