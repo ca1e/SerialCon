@@ -32,11 +32,11 @@ int main(void)
 
     while(1)
     {
-        if(SystemTick1ms()) { // tick tock 1ms
+        if(SystemTick100ms()) { // tick tock 1ms
             tick1000ms++;
             if(tick1000ms == 50) {
                 LEDs_TurnOnLEDs(LEDMASK_TX);
-            }else if(tick1000ms == 500) {
+            }else if(tick1000ms == 100) {
                 LEDs_TurnOffLEDs(LEDMASK_TX);
                 tick1000ms = 0;
             }

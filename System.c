@@ -15,18 +15,16 @@ ISR (TIMER1_COMPA_vect)
 }
 ISR (TIMER0_OVF_vect) // timer0 overflow interrupt
 {
-    // TCNT0 += 6; // add 6 to the register (our work around)
+    TCNT0 += 6; // add 6 to the register (our work around)
 
-    systick_ms++;
-    if(systick_ms == 120) { // ~1ms
-        systick_ms = 0;
-    }
+    systick_ms ^= 0x1;
+    systickmillis++;
 }
 
 inline void timer0_init(void) {
     // set prescaler to 64 and start the timer
-    TCCR0B |= (1 << CS01) | (1 << CS00);    // 16000000(F_CPU) / 64  = 250,000 Hz
-    TCNT0 = 0;
+    TCCR0B |= (1 << CS01) | (1 << CS00);    // 16,000,000(F_CPU) / 64  = 250,000 Hz
+    TCNT0 = 6;
     TIMSK0 |= (1 << TOIE0); // Initialize timer0 interrupt
 }
 
@@ -51,6 +49,16 @@ inline bool SystemTick1ms(void)
 {
     // return systickmillis == 0;
     return systick_ms == 0;
+}
+
+inline bool SystemTick100ms(void)
+{
+    if (systickmillis % 100 == 0) {
+        systickmillis = 0;
+        return true;
+    }
+    
+    return false;
 }
 
 void SystemInit(void)

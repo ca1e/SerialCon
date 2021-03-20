@@ -13,5 +13,6 @@
 void SystemInit(void);
 void SystemInterruptInit(void);
 bool SystemTick1ms(void);
+bool SystemTick100ms(void);
 
 #endif
