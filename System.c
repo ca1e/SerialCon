@@ -39,10 +39,6 @@ inline void timer1_init(void) {
     //TIMSK0 |= (1<<OCIE0A);              //Output Compare Match A Interrupt Enable
 }
 
-inline void enable_rx_isr(void) {
-	UCSR1B |= _BV(RXCIE1);
-}
-
 inline bool SystemTick1ms(void) {
     return systick_ms == 0;
 }
@@ -63,11 +59,6 @@ void SystemInit(void)
     // We need to disable clock division before initializing the USB hardware.
     clock_prescale_set(clock_div_1);
     //
-    SystemInterruptInit();
-}
-
-void SystemInterruptInit(void)
-{
     cli();
     timer0_init();
     //timer1_init();

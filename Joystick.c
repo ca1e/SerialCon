@@ -35,9 +35,9 @@ int main(void)
         {
             tick1000ms++;
             if(tick1000ms == 50) {
-                LEDs_TurnOnLEDs(LEDMASK_TX);
+                TurnOnLED(LEDMASK_TX);
             }else if(tick1000ms == 100) {
-                LEDs_TurnOffLEDs(LEDMASK_TX);
+                TurnOffLED(LEDMASK_TX);
                 tick1000ms = 0;
             }
         }

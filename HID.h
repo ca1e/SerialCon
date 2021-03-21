@@ -71,7 +71,15 @@ void EVENT_USB_Device_ConfigurationChanged(void);
 void EVENT_USB_Device_ControlRequest(void);
 
 void Report_Task(void);
-void ResetReport(void);
+// Reset report to default.
+inline void ResetReport(void) {
+    memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
+    next_report.LX = STICK_CENTER;
+    next_report.LY = STICK_CENTER;
+    next_report.RX = STICK_CENTER;
+    next_report.RY = STICK_CENTER;
+    next_report.HAT = HAT_CENTER;
+}
 // Prepare the next report for the host.
 inline void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 	memcpy(ReportData, &next_report, sizeof(USB_JoystickReport_Input_t));

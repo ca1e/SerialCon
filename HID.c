@@ -119,14 +119,3 @@ void Report_Task(void) {
 #endif
   }
 }
-
-// Reset report to default.
-void ResetReport(void)
-{
-    memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
-    next_report.LX = STICK_CENTER;
-    next_report.LY = STICK_CENTER;
-    next_report.RX = STICK_CENTER;
-    next_report.RY = STICK_CENTER;
-    next_report.HAT = HAT_CENTER;
-}
