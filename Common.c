@@ -1,10 +1,10 @@
 #include "Common.h"
 
-volatile uint8_t led_ms = 0;
+volatile uint8_t led_ms = 0;                          // transmission LED countdown
 
 ISR(USART1_RX_vect)
 {
-    // Serial_Task(Serial_ReceiveByte());
+    Serial_Task(Serial_ReceiveByte());
 }
 
 inline void disable_rx_isr(void) {
@@ -28,6 +28,16 @@ void BlinkLED(void)
 {
     led_ms = LED_DURATION;
     TurnOnLED(LEDMASK_TX);
+}
+void BlinkLEDTick(void)
+{
+    // decrement LED counter
+    if (led_ms != 0)
+    {
+        led_ms--;
+        if (led_ms == 0)
+            TurnOffLED(LEDMASK_TX);
+    }
 }
 
 void Serial_Send(const char DataByte)

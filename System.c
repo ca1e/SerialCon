@@ -3,21 +3,13 @@
 volatile uint8_t systick_ms = 0;
 volatile uint16_t systickmillis = 0;
 
-ISR (TIMER0_OVF_vect) // timer0 overflow interrupt
-{
-    TCNT0 += 6; // add 6 to the register (our work around)
-
-    systick_ms ^= 0x1;
-    systickmillis++;
-}
-ISR (TIMER1_COMPA_vect)
-{
-    if(systickmillis == 1000)
-    {
-        systickmillis = 0;
-    }
-    systickmillis++;
-}
+//ISR (TIMER0_OVF_vect) // timer0 overflow interrupt
+//{
+//    TCNT0 += 6; // add 6 to the register (our work around)
+//
+//    systick_ms ^= 0x1;
+//    systickmillis++;
+//}
 
 inline void timer0_init(void) {
     // set prescaler to 64 and start the timer
@@ -27,6 +19,7 @@ inline void timer0_init(void) {
 }
 
 inline void timer1_init(void) {
+    // ISR (TIMER1_COMPA_vect) ?
     // configurations for timer1
     TCNT1 = 0;  // set counter to 0.
     OCR1A = 15999;
@@ -37,18 +30,6 @@ inline void timer1_init(void) {
     //TCCR0A |= (1<<WGM01);   //sets mode to CTC
     //OCR0A = 240;      // 250000 / 24 = 0.1ms
     //TIMSK0 |= (1<<OCIE0A);              //Output Compare Match A Interrupt Enable
-}
-
-inline bool SystemTick1ms(void) {
-    return systick_ms == 0;
-}
-
-inline bool SystemTick100ms(void) {
-    if (systickmillis % 100 == 0) {
-        systickmillis = 0;
-        return true;
-    }
-    return false;
 }
 
 void SystemInit(void)

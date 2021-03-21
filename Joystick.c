@@ -25,24 +25,31 @@ volatile uint16_t tick1000ms = 0;
 int main(void)
 {
     SystemInit();
+    // Initialize script.
+    ScriptInit();
     CommonInit();
     // The USB stack should be initialized last.
     HID_Init();
-
+    // Once that's done, we'll enter an infinite loop.
     while(1)
     {
-        if(SystemTick100ms()) // tick tock 1ms
-        {
-            tick1000ms++;
-            if(tick1000ms == 50) {
-                TurnOnLED(LEDMASK_TX);
-            }else if(tick1000ms == 100) {
-                TurnOffLED(LEDMASK_TX);
-                tick1000ms = 0;
-            }
-        }
-
+        // codes here...
+        // Process local script instructions.
+        Script_Task();
         // ApplicationTask();
         HID_Task();
+
+        Decrement_Report_Echo();
     }
+}
+
+ISR (TIMER0_OVF_vect) // timer0 overflow interrupt ~1ms
+{
+    TCNT0 += 6; // add 6 to the register (our work around)
+
+    Increment_Timer();
+    Decrement_Echo();
+    Decrement_Waiting();
+
+    BlinkLEDTick();
 }

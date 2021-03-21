@@ -12,7 +12,4 @@
 
 void SystemInit(void);
 
-bool SystemTick1ms(void);
-bool SystemTick100ms(void);
-
 #endif

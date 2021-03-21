@@ -1,9 +1,26 @@
-#ifndef HID_H_
-#define HID_H_
-
-#include "LUFADescriptors.h"
+#ifndef _HID_H_
+#define _HID_H_
 
 #include <LUFA/Drivers/USB/USB.h>
+#include "LUFADescriptors.h"
+#include "Common.h"
+#include "EasyCon.h"
+
+#define HAT_TOP          0x00
+#define HAT_TOP_RIGHT    0x01
+#define HAT_RIGHT        0x02
+#define HAT_BOTTOM_RIGHT 0x03
+#define HAT_BOTTOM       0x04
+#define HAT_BOTTOM_LEFT  0x05
+#define HAT_LEFT         0x06
+#define HAT_TOP_LEFT     0x07
+#define HAT_CENTER       0x08
+
+#define STICK_MIN      0
+#define STICK_CENTER 128
+#define STICK_MAX    255
+
+#define ECHO_INTERVAL 2
 
 // Type Defines
 // Enumeration for joystick buttons.
@@ -23,20 +40,6 @@ typedef enum {
 	SWITCH_HOME    = 0x1000,
 	SWITCH_CAPTURE = 0x2000,
 } JoystickButtons_t;
-
-#define HAT_TOP          0x00
-#define HAT_TOP_RIGHT    0x01
-#define HAT_RIGHT        0x02
-#define HAT_BOTTOM_RIGHT 0x03
-#define HAT_BOTTOM       0x04
-#define HAT_BOTTOM_LEFT  0x05
-#define HAT_LEFT         0x06
-#define HAT_TOP_LEFT     0x07
-#define HAT_CENTER       0x08
-
-#define STICK_MIN      0
-#define STICK_CENTER 128
-#define STICK_MAX    255
 
 // Joystick HID report structure. We have an input and an output.
 typedef struct {
@@ -60,7 +63,8 @@ typedef struct {
 	uint8_t  RY;     // Right Stick Y
 } USB_JoystickReport_Output_t;
 
-USB_JoystickReport_Input_t next_report;
+extern USB_JoystickReport_Input_t next_report;
+extern volatile uint8_t echo_ms;
 
 void HID_Init(void);
 void HID_Task(void);
@@ -69,20 +73,18 @@ void EVENT_USB_Device_Connect(void);
 void EVENT_USB_Device_Disconnect(void);
 void EVENT_USB_Device_ConfigurationChanged(void);
 void EVENT_USB_Device_ControlRequest(void);
-
 void Report_Task(void);
-// Reset report to default.
-inline void ResetReport(void) {
-    memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
-    next_report.LX = STICK_CENTER;
-    next_report.LY = STICK_CENTER;
-    next_report.RX = STICK_CENTER;
-    next_report.RY = STICK_CENTER;
-    next_report.HAT = HAT_CENTER;
+void ResetReport(void);
+
+inline void Decrement_Echo(void)
+{
+	// decrement echo counter
+    if (echo_ms != 0)
+        echo_ms--;
 }
 // Prepare the next report for the host.
 inline void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
-	memcpy(ReportData, &next_report, sizeof(USB_JoystickReport_Input_t));
+	memcpy(&next_report, &ReportData, sizeof(USB_JoystickReport_Input_t));
 }
 
 #endif

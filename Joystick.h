@@ -39,5 +39,6 @@
 #include "Common.h"
 #include "System.h"
 #include "HID.h"
+#include "EasyCon.h"
 
 #endif

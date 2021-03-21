@@ -1,5 +1,18 @@
 #include "HID.h"
 
+volatile uint8_t echo_ms = 0; // echo counter
+USB_JoystickReport_Input_t next_report;
+
+// Reset report to default.
+void ResetReport(void) {
+    memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
+    next_report.LX = STICK_CENTER;
+    next_report.LY = STICK_CENTER;
+    next_report.RX = STICK_CENTER;
+    next_report.RY = STICK_CENTER;
+    next_report.HAT = HAT_CENTER;
+}
+
 void HID_Init(void)
 {
   ResetReport();
@@ -8,13 +21,18 @@ void HID_Init(void)
 
 void HID_Task(void)
 {
+  // We need to run our task to process and deliver data for our IN and OUT endpoints.
   Report_Task();
+  // We also need to run the main USB management task.
   USB_USBTask();
 }
 
 // Fired to indicate that the device is enumerating.
 void EVENT_USB_Device_Connect(void) {
   // We can indicate that we're enumerating here (via status LEDs, sound, etc.).
+  
+  // Start script.
+  Script_AutoStart();
 }
 
 // Fired to indicate that the device is no longer connected to a host.
@@ -34,42 +52,11 @@ void EVENT_USB_Device_ConfigurationChanged(void) {
 }
 
 // Process control requests sent to the device from the USB host.
-void EVENT_USB_Device_ControlRequest(void) {
-  // We can handle two control requests: a GetReport and a SetReport.
-  switch (USB_ControlRequest.bRequest)
-  {
-    // GetReport is a request for data from the device.
-    case HID_REQ_GetReport:
-      if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
-      {
-        // We'll create an empty report.
-        USB_JoystickReport_Input_t JoystickInputData;
-        // We'll then populate this report with what we want to send to the host.
-        GetNextReport(&JoystickInputData);
-        // Since this is a control endpoint, we need to clear up the SETUP packet on this endpoint.
-        Endpoint_ClearSETUP();
-        // Once populated, we can output this data to the host. We do this by first writing the data to the control stream.
-        Endpoint_Write_Control_Stream_LE(&JoystickInputData, sizeof(JoystickInputData));
-        // We then acknowledge an OUT packet on this endpoint.
-        Endpoint_ClearOUT();
-      }
+void EVENT_USB_Device_ControlRequest(void)
+{
+    // We can handle two control requests: a GetReport and a SetReport.
 
-      break;
-    case HID_REQ_SetReport:
-      if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
-      {
-        // We'll create a place to store our data received from the host.
-        USB_JoystickReport_Output_t JoystickOutputData;
-        // Since this is a control endpoint, we need to clear up the SETUP packet on this endpoint.
-        Endpoint_ClearSETUP();
-        // With our report available, we read data from the control stream.
-        Endpoint_Read_Control_Stream_LE(&JoystickOutputData, sizeof(JoystickOutputData));
-        // We then send an IN packet on this endpoint.
-        Endpoint_ClearIN();
-      }
-
-      break;
-  }
+    // Not used here, it looks like we don't receive control request from the Switch.
 }
 
 // Process and deliver data from IN and OUT endpoints.
@@ -97,6 +84,10 @@ void Report_Task(void) {
     Endpoint_ClearOUT();
   }
 
+// [Optimized] Only send data when changed.
+    if (echo_ms == 0)
+    {
+
   // We'll then move on to the IN endpoint.
   Endpoint_SelectEndpoint(JOYSTICK_IN_EPADDR);
   // We first check to see if the host is ready to accept data.
@@ -107,15 +98,22 @@ void Report_Task(void) {
     // We'll then populate this report with what we want to send to the host.
     GetNextReport(&JoystickInputData);
     // Once populated, we can output this data to the host. We do this by first writing the data to the control stream.
-#ifdef _ANOTHER_CODES
+
+/* another codes impl
     while(Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) != ENDPOINT_RWSTREAM_NoError);
     // We then send an IN packet on this endpoint.
     Endpoint_ClearIN();
-#else
-    if (Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) == ENDPOINT_RWSTREAM_NoError) {
+*/
+
+    if (Endpoint_Write_Stream_LE(&next_report, sizeof(next_report), NULL) == ENDPOINT_RWSTREAM_NoError) {
       // We then send an IN packet on this endpoint.
       Endpoint_ClearIN();
+
+      // set interval
+      echo_ms = ECHO_INTERVAL;
     }
-#endif
   }
+// [Optimized] Only send data when changed.
+    }
+
 }

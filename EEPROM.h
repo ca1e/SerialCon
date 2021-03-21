@@ -6,10 +6,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// eeprom_write_byte(uint8_t)
-// eeprom_read_byte
+#define EMEM_SIZE MEM_SIZE
 
-// eeprom_write_word(uint16_t)
-// eeprom_read_word
+// (uint8_t)
+#define EEP_Write_Byte eeprom_write_byte
+#define EEP_Read_Byte eeprom_read_byte
+// (uint16_t)
+#define EEP_Write_Word eeprom_write_word
+#define EEP_Read_Word eeprom_read_word
 
 #endif
