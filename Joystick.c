@@ -25,14 +25,14 @@ volatile uint16_t tick1000ms = 0;
 int main(void)
 {
     SystemInit();
-    // Initialize LEDs.
-    LEDs_Init();
+    CommonInit();
     // The USB stack should be initialized last.
     HID_Init();
 
     while(1)
     {
-        if(SystemTick100ms()) { // tick tock 1ms
+        if(SystemTick100ms()) // tick tock 1ms
+        {
             tick1000ms++;
             if(tick1000ms == 50) {
                 LEDs_TurnOnLEDs(LEDMASK_TX);
@@ -42,7 +42,7 @@ int main(void)
             }
         }
 
+        // ApplicationTask();
         HID_Task();
-        //ApplicationTask();
     }
 }

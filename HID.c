@@ -1,15 +1,15 @@
 #include "HID.h"
 
-void HID_Init(void) {
-    // Initialize serial port.
-    Serial_Init(115200, false);
-
-    USB_Init();
+void HID_Init(void)
+{
+  ResetReport();
+  USB_Init();
 }
 
-void HID_Task(void) {
-    Report_Task();
-    USB_USBTask();
+void HID_Task(void)
+{
+  Report_Task();
+  USB_USBTask();
 }
 
 // Fired to indicate that the device is enumerating.
@@ -107,16 +107,26 @@ void Report_Task(void) {
     // We'll then populate this report with what we want to send to the host.
     GetNextReport(&JoystickInputData);
     // Once populated, we can output this data to the host. We do this by first writing the data to the control stream.
+#ifdef _ANOTHER_CODES
+    while(Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) != ENDPOINT_RWSTREAM_NoError);
+    // We then send an IN packet on this endpoint.
+    Endpoint_ClearIN();
+#else
     if (Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) == ENDPOINT_RWSTREAM_NoError) {
       // We then send an IN packet on this endpoint.
       Endpoint_ClearIN();
-      /* Clear the report data afterwards */
-      // set interval
-      //echo_ms = ECHO_INTERVAL;
     }
+#endif
   }
 }
-// Prepare the next report for the host.
-void GetNextReport(USB_JoystickReport_Input_t* const LReportData) {
-  memcpy(LReportData, &ReportData, sizeof(USB_JoystickReport_Input_t));
+
+// Reset report to default.
+void ResetReport(void)
+{
+    memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
+    next_report.LX = STICK_CENTER;
+    next_report.LY = STICK_CENTER;
+    next_report.RX = STICK_CENTER;
+    next_report.RY = STICK_CENTER;
+    next_report.HAT = HAT_CENTER;
 }

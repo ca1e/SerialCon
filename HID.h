@@ -4,8 +4,6 @@
 #include "LUFADescriptors.h"
 
 #include <LUFA/Drivers/USB/USB.h>
-#include <LUFA/Drivers/Peripheral/Serial.h>
-#include <LUFA/Platform/Platform.h>
 
 // Type Defines
 // Enumeration for joystick buttons.
@@ -62,7 +60,7 @@ typedef struct {
 	uint8_t  RY;     // Right Stick Y
 } USB_JoystickReport_Output_t;
 
-USB_JoystickReport_Input_t ReportData;
+USB_JoystickReport_Input_t next_report;
 
 void HID_Init(void);
 void HID_Task(void);
@@ -73,6 +71,10 @@ void EVENT_USB_Device_ConfigurationChanged(void);
 void EVENT_USB_Device_ControlRequest(void);
 
 void Report_Task(void);
-void GetNextReport(USB_JoystickReport_Input_t* const LReportData);
+void ResetReport(void);
+// Prepare the next report for the host.
+inline void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
+	memcpy(ReportData, &next_report, sizeof(USB_JoystickReport_Input_t));
+}
 
 #endif

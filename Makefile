@@ -21,7 +21,7 @@ F_USB        = $(F_CPU)
 OPTIMIZATION = s
 TARGET       = ./$(REAL_BOARD)/$(REAL_BOARD)
 SRC         += Joystick.c LUFADescriptors.c
-SRC			+= HID.c System.c
+SRC			+= HID.c System.c Common.c
 SRC			+= $(LUFA_SRC_USB)
 
 # Run "make help" for target help.

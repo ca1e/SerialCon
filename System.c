@@ -3,21 +3,19 @@
 volatile uint8_t systick_ms = 0;
 volatile uint16_t systickmillis = 0;
 
-ISR(USART1_RX_vect) {
-	// Serial_Task(Serial_ReceiveByte());
-}
-ISR (TIMER1_COMPA_vect)
-{
-    if(systickmillis == 1000) {
-        systickmillis = 0;
-    }
-    systickmillis++;
-}
 ISR (TIMER0_OVF_vect) // timer0 overflow interrupt
 {
     TCNT0 += 6; // add 6 to the register (our work around)
 
     systick_ms ^= 0x1;
+    systickmillis++;
+}
+ISR (TIMER1_COMPA_vect)
+{
+    if(systickmillis == 1000)
+    {
+        systickmillis = 0;
+    }
     systickmillis++;
 }
 
@@ -45,19 +43,15 @@ inline void enable_rx_isr(void) {
 	UCSR1B |= _BV(RXCIE1);
 }
 
-inline bool SystemTick1ms(void)
-{
-    // return systickmillis == 0;
+inline bool SystemTick1ms(void) {
     return systick_ms == 0;
 }
 
-inline bool SystemTick100ms(void)
-{
+inline bool SystemTick100ms(void) {
     if (systickmillis % 100 == 0) {
         systickmillis = 0;
         return true;
     }
-    
     return false;
 }
 
@@ -68,16 +62,16 @@ void SystemInit(void)
     wdt_disable();
     // We need to disable clock division before initializing the USB hardware.
     clock_prescale_set(clock_div_1);
+    //
+    SystemInterruptInit();
+}
 
+void SystemInterruptInit(void)
+{
     cli();
     timer0_init();
     //timer1_init();
     sei();
     // We'll then enable global interrupts for our use.
     GlobalInterruptEnable();
-}
-
-void SystemInterruptInit(void)
-{
-    //
 }
