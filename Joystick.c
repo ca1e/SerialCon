@@ -20,14 +20,12 @@ these buttons for our use.
 
 #include "Joystick.h"
 
-volatile uint16_t tick1000ms = 0;
-
 int main(void)
 {
     SystemInit();
+    CommonInit();
     // Initialize script.
     ScriptInit();
-    CommonInit();
     // The USB stack should be initialized last.
     HID_Init();
     // Once that's done, we'll enter an infinite loop.
@@ -38,8 +36,6 @@ int main(void)
         Script_Task();
         // ApplicationTask();
         HID_Task();
-
-        Decrement_Report_Echo();
     }
 }
 
@@ -47,9 +43,10 @@ ISR (TIMER0_OVF_vect) // timer0 overflow interrupt ~1ms
 {
     TCNT0 += 6; // add 6 to the register (our work around)
 
+    HIDTick();
+    // script ms
     Increment_Timer();
-    Decrement_Echo();
-    Decrement_Waiting();
+    ScriptTick();
 
     BlinkLEDTick();
 }

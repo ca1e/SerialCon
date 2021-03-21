@@ -3,8 +3,8 @@
 
 #include <LUFA/Drivers/USB/USB.h>
 #include "LUFADescriptors.h"
+
 #include "Common.h"
-#include "EasyCon.h"
 
 #define HAT_TOP          0x00
 #define HAT_TOP_RIGHT    0x01
@@ -76,7 +76,7 @@ void EVENT_USB_Device_ControlRequest(void);
 void Report_Task(void);
 void ResetReport(void);
 
-inline void Decrement_Echo(void)
+inline void HIDTick(void)
 {
 	// decrement echo counter
     if (echo_ms != 0)
@@ -84,7 +84,7 @@ inline void Decrement_Echo(void)
 }
 // Prepare the next report for the host.
 inline void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
-	memcpy(&next_report, &ReportData, sizeof(USB_JoystickReport_Input_t));
+	memcpy(ReportData, &next_report, sizeof(USB_JoystickReport_Input_t));
 }
 
 #endif

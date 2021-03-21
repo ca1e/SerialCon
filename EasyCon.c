@@ -11,12 +11,13 @@ uint8_t* script_addr = 0;                               // address of next instr
 uint8_t* script_eof = 0;                                 // address of EOF
 uint16_t tail_wait = 0;                                   // insert an extra wait before next instruction (used by compressed instruction)
 uint32_t timer_elapsed = 0;                          // previous execution time
+bool auto_run = false;
 
 // timers define
 volatile uint32_t timer_ms = 0;                      // script timer
 volatile uint32_t wait_ms = 0;                       // waiting counter
 
-void Decrement_Waiting(void)
+void ScriptTick(void)
 {
     // decrement waiting counter
     if (wait_ms != 0 && (_report_echo == 0 || wait_ms >1))
@@ -29,6 +30,12 @@ void Decrement_Report_Echo(void)
             {
         _report_echo = Max(0,_report_echo-1);
     }
+}
+
+// Run script on startup.
+void Script_AutoStart(void)
+{
+    if (auto_run) Script_Start();
 }
 // Initialize script. Load static script into EEPROM if exists.
 void ScriptInit(void)
@@ -70,14 +77,8 @@ void ScriptInit(void)
         DY(i) = y;
     }
 	_report_echo = ECHO_TIMES;
-}
-
-// Run script on startup.
-void Script_AutoStart(void)
-{
     // only if highest bit is 0
-    if ((EEP_Read_Byte((uint8_t*)1) >> 7) == 0)
-        Script_Start();
+    auto_run = (EEP_Read_Byte((uint8_t*)1) >> 7) == 0;
 }
 // Run script.
 void Script_Start(void)
@@ -98,7 +99,7 @@ void Script_Start(void)
     _script_running = 1;
     _seed = EEP_Read_Word((uint16_t*)SEED_OFFSET);
 
-    TurnOnLED(LEDMASK_RX);
+    StartRunningLED();
 }
 
 // Stop script.
@@ -111,7 +112,7 @@ void Script_Stop(void)
     ///////////////////////////
     _report_echo = ECHO_TIMES;
 
-    TurnOffLED(LEDMASK_RX);
+    StopRunningLED();
 }
 // Process script instructions.
 void Script_Task(void)
@@ -136,27 +137,27 @@ void Script_Task(void)
                     if (i == 32)
                     {
                         // LS
-                        next_report.LX = STICK_CENTER;
-                        next_report.LY = STICK_CENTER;
+                        ReportInputLX = STICK_CENTER;
+                        ReportInputLY = STICK_CENTER;
                         _report_echo = ECHO_TIMES;
                     }
                     else if (i == 33)
                     {
                         // RS
-                        next_report.RX = STICK_CENTER;
-                        next_report.RY = STICK_CENTER;
+                        ReportInputRX = STICK_CENTER;
+                        ReportInputRY = STICK_CENTER;
                         _report_echo = ECHO_TIMES;
                     }
                     else if ((i & 0x10) == 0)
                     {
                         // Button
-                        next_report.Button &= ~(1 << i);
+                        ReportInputButton &= ~(1 << i);
                         _report_echo = ECHO_TIMES;
                     }
                     else
                     {
                         // HAT
-                        next_report.HAT = HAT_CENTER;
+                        ReportInputHAT = HAT_CENTER;
                         _report_echo = ECHO_TIMES;
                     }
                 }
@@ -191,13 +192,13 @@ void Script_Task(void)
                 if ((_keycode & 0x10) == 0)
                 {
                     // Button
-                    next_report.Button |= 1 << _keycode;
+                    ReportInputButton |= 1 << _keycode;
                     _report_echo = ECHO_TIMES;
                 }
                 else
                 {
                     // HAT
-                    next_report.HAT = _keycode & 0xF;
+                    ReportInputHAT = _keycode & 0xF;
                     _report_echo = ECHO_TIMES;
                 }
                 // post effect
@@ -242,15 +243,15 @@ void Script_Task(void)
                 if (_lr)
                 {
                     // RS
-                    next_report.RX = DX(_direction);
-                    next_report.RY = DY(_direction);
+                    ReportInputRX = DX(_direction);
+                    ReportInputRY = DY(_direction);
                     _report_echo = ECHO_TIMES;
                 }
                 else
                 {
                     // LS
-                    next_report.LX = DX(_direction);
-                    next_report.LY = DY(_direction);
+                    ReportInputLX = DX(_direction);
+                    ReportInputLY = DY(_direction);
                     _report_echo = ECHO_TIMES;
                 }
                 // post effect
@@ -766,12 +767,12 @@ void Serial_Task(int16_t byte)
                 else
                 {
                     //memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
-                    next_report.Button = (SERIAL_BUFFER(0) << 9) | (SERIAL_BUFFER(1) << 2) | (SERIAL_BUFFER(2) >> 5);
-                    next_report.HAT = (uint8_t)((SERIAL_BUFFER(2) << 3) | (SERIAL_BUFFER(3) >> 4));
-                    next_report.LX = (uint8_t)((SERIAL_BUFFER(3) << 4) | (SERIAL_BUFFER(4) >> 3));
-                    next_report.LY = (uint8_t)((SERIAL_BUFFER(4) << 5) | (SERIAL_BUFFER(5) >> 2));
-                    next_report.RX = (uint8_t)((SERIAL_BUFFER(5) << 6) | (SERIAL_BUFFER(6) >> 1));
-                    next_report.RY = (uint8_t)((SERIAL_BUFFER(6) << 7) | (SERIAL_BUFFER(7) & 0x7f));
+                    ReportInputButton = (SERIAL_BUFFER(0) << 9) | (SERIAL_BUFFER(1) << 2) | (SERIAL_BUFFER(2) >> 5);
+                    ReportInputHAT = (uint8_t)((SERIAL_BUFFER(2) << 3) | (SERIAL_BUFFER(3) >> 4));
+                    ReportInputLX = (uint8_t)((SERIAL_BUFFER(3) << 4) | (SERIAL_BUFFER(4) >> 3));
+                    ReportInputLY = (uint8_t)((SERIAL_BUFFER(4) << 5) | (SERIAL_BUFFER(5) >> 2));
+                    ReportInputRX = (uint8_t)((SERIAL_BUFFER(5) << 6) | (SERIAL_BUFFER(6) >> 1));
+                    ReportInputRY = (uint8_t)((SERIAL_BUFFER(6) << 7) | (SERIAL_BUFFER(7) & 0x7f));
                     // set flag
                     _report_echo = ECHO_TIMES;
                     // send ACK

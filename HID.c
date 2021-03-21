@@ -31,8 +31,7 @@ void HID_Task(void)
 void EVENT_USB_Device_Connect(void) {
   // We can indicate that we're enumerating here (via status LEDs, sound, etc.).
   
-  // Start script.
-  Script_AutoStart();
+  Device_Connected();
 }
 
 // Fired to indicate that the device is no longer connected to a host.
@@ -55,7 +54,24 @@ void EVENT_USB_Device_ConfigurationChanged(void) {
 void EVENT_USB_Device_ControlRequest(void)
 {
     // We can handle two control requests: a GetReport and a SetReport.
+    switch (USB_ControlRequest.bRequest)
+    {
+      // GetReport is a request for data from the device.
+      case HID_REQ_GetReport:
+        if (USB_ControlRequest.bmRequestType == (REQDIR_DEVICETOHOST | REQTYPE_CLASS | REQREC_INTERFACE))
+        {
+          //
+        }
 
+        break;
+      case HID_REQ_SetReport:
+        if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
+        {
+          //
+        }
+
+        break;
+    }
     // Not used here, it looks like we don't receive control request from the Switch.
 }
 
@@ -87,7 +103,7 @@ void Report_Task(void) {
 // [Optimized] Only send data when changed.
     if (echo_ms == 0)
     {
-
+///////////////////////////////////////////
   // We'll then move on to the IN endpoint.
   Endpoint_SelectEndpoint(JOYSTICK_IN_EPADDR);
   // We first check to see if the host is ready to accept data.
@@ -105,15 +121,16 @@ void Report_Task(void) {
     Endpoint_ClearIN();
 */
 
-    if (Endpoint_Write_Stream_LE(&next_report, sizeof(next_report), NULL) == ENDPOINT_RWSTREAM_NoError) {
+    if (Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) == ENDPOINT_RWSTREAM_NoError) {
       // We then send an IN packet on this endpoint.
       Endpoint_ClearIN();
 
+      Echo_Report();
       // set interval
       echo_ms = ECHO_INTERVAL;
     }
   }
-// [Optimized] Only send data when changed.
+// echo_ms end
     }
-
+////////////////////////////////////////////
 }

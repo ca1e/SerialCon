@@ -8,7 +8,16 @@
 
 #include "EEPROM.h"
 #include "Common.h"
+
 #include "HID.h"
+#define ReportInputButton next_report.Button
+#define ReportInputHAT next_report.HAT
+
+#define ReportInputLX next_report.LX
+#define ReportInputLY next_report.LY
+
+#define ReportInputRX next_report.RX
+#define ReportInputRY next_report.RY
 
 // constants
 #define VERSION 0x45
@@ -24,7 +33,7 @@
 #define CALLSTACK_OFFSET 190
 #define FORSTACK_OFFSET 250
 #define INS_OFFSET 370
-#define SEED_OFFSET MEM_SIZE + 0
+#define SEED_OFFSET EMEM_SIZE + 0
 
 // serial protocal control bytes and replies
 #define CMD_READY 0xA5
@@ -103,7 +112,7 @@ inline void Increment_Timer(void) {
     // increment timer
     timer_ms++;
 }
-void Decrement_Waiting(void);
+void ScriptTick(void);
 void Decrement_Report_Echo(void);
 void BinaryOp(uint8_t op, uint8_t reg, int16_t value);
 
