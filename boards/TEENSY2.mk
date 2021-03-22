@@ -2,9 +2,7 @@ REAL_BOARD   := Teensy2
 MEM_SIZE     := 924
 LEDMASK_TX   := LEDS_LED1
 LEDMASK_RX   := LEDS_LED1
-
 BOARD        := TEENSY2
-MCU          := atmega32u4
 
 .PHONY:teensy2
 teensy2:all
