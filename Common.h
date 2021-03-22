@@ -24,7 +24,7 @@ void BlinkLED(void);
 void BlinkLEDTick(void);
 void Serial_Send(const char DataByte);
 
-inline static void StartRunningLED(void) {TurnOnLED(LEDMASK_RX);}
-inline static void StopRunningLED(void) {TurnOffLED(LEDMASK_RX);}
+static inline void StartRunningLED(void) { TurnOnLED(LEDMASK_RX); }
+static inline void StopRunningLED(void) { TurnOffLED(LEDMASK_RX); }
 
 #endif

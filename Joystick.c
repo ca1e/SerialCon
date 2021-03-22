@@ -24,12 +24,13 @@ int main(void)
 {
     SystemInit();
     CommonInit();
+    PCIInit();
     // Initialize script.
     ScriptInit();
     // The USB stack should be initialized last.
     HID_Init();
     // Once that's done, we'll enter an infinite loop.
-    while(1)
+    while (1)
     {
         // codes here...
         // Process local script instructions.
@@ -39,7 +40,7 @@ int main(void)
     }
 }
 
-ISR (TIMER0_OVF_vect) // timer0 overflow interrupt ~1ms
+ISR(TIMER0_OVF_vect) // timer0 overflow interrupt ~1ms
 {
     TCNT0 += 6; // add 6 to the register (our work around)
 

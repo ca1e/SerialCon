@@ -53,52 +53,52 @@
 
 // indexed variables and inline functions
 #define SERIAL_BUFFER(i) mem[(i)]
-#define KEY(keycode) mem[KEYCODE_OFFSET+(keycode)]
-#define REG(i) *(int16_t*)(mem+REGISTER_OFFSET+((i)<<1))
-#define STACK(i) *(int16_t*)(mem+STACK_OFFSET+((i)<<1))
-#define CALLSTACK(i) *(uint16_t*)(mem+CALLSTACK_OFFSET+((i)<<1))
-#define DX(i) mem[DIRECTION_OFFSET+((i)<<1)]
-#define DY(i) mem[DIRECTION_OFFSET+((i)<<1)+1]
-#define FOR_I(i) *(int32_t*)(mem+FORSTACK_OFFSET+(i)*12)
-#define FOR_C(i) *(int32_t*)(mem+FORSTACK_OFFSET+(i)*12+4)
-#define FOR_ADDR(i) *(uint16_t*)(mem+FORSTACK_OFFSET+(i)*12+8)
-#define FOR_NEXT(i) *(uint16_t*)(mem+FORSTACK_OFFSET+(i)*12+10)
-#define SETWAIT(time) wait_ms=(time)
-#define RESETAFTER(keycode,n) KEY(keycode)=n
-#define JUMP(addr) script_addr = (uint8_t*)(addr)
-#define JUMPNEAR(addr) script_addr = (uint8_t*)((uint16_t)script_addr + (addr))
+#define KEY(keycode) mem[KEYCODE_OFFSET + (keycode)]
+#define REG(i) *(int16_t *)(mem + REGISTER_OFFSET + ((i) << 1))
+#define STACK(i) *(int16_t *)(mem + STACK_OFFSET + ((i) << 1))
+#define CALLSTACK(i) *(uint16_t *)(mem + CALLSTACK_OFFSET + ((i) << 1))
+#define DX(i) mem[DIRECTION_OFFSET + ((i) << 1)]
+#define DY(i) mem[DIRECTION_OFFSET + ((i) << 1) + 1]
+#define FOR_I(i) *(int32_t *)(mem + FORSTACK_OFFSET + (i)*12)
+#define FOR_C(i) *(int32_t *)(mem + FORSTACK_OFFSET + (i)*12 + 4)
+#define FOR_ADDR(i) *(uint16_t *)(mem + FORSTACK_OFFSET + (i)*12 + 8)
+#define FOR_NEXT(i) *(uint16_t *)(mem + FORSTACK_OFFSET + (i)*12 + 10)
+#define SETWAIT(time) wait_ms = (time)
+#define RESETAFTER(keycode, n) KEY(keycode) = n
+#define JUMP(addr) script_addr = (uint8_t *)(addr)
+#define JUMPNEAR(addr) script_addr = (uint8_t *)((uint16_t)script_addr + (addr))
 #define E(val) _e_set = 1, _e_val = (val)
-#define E_SET ((_e_set_t = _e_set),(_e_set = 0),_e_set_t)
+#define E_SET ((_e_set_t = _e_set), (_e_set = 0), _e_set_t)
 
 // single-byte variables
 #define _ins3 mem[INS_OFFSET]
-#define _ins2 mem[INS_OFFSET+1]
-#define _ins1 mem[INS_OFFSET+2]
-#define _ins0 mem[INS_OFFSET+3]
-#define _ins *(uint16_t*)(mem+INS_OFFSET+2)
-#define _insEx *(uint32_t*)(mem+INS_OFFSET)
-#define _code mem[INS_OFFSET+4]
-#define _keycode mem[INS_OFFSET+5]
-#define _lr mem[INS_OFFSET+6]
-#define _direction mem[INS_OFFSET+7]
-#define _addr *(uint16_t*)(mem+INS_OFFSET+8)
-#define _stackindex mem[INS_OFFSET+10]
-#define _callstackindex mem[INS_OFFSET+11]
-#define _forstackindex mem[INS_OFFSET+12]
-#define _report_echo mem[INS_OFFSET+13]
-#define _e_set mem[INS_OFFSET+14]
-#define _e_set_t mem[INS_OFFSET+15]
-#define _e_val *(uint16_t*)(mem+INS_OFFSET+16)    // external argument for next instruction (used for dynamic for-loop, wait etc.)
-#define _script_running mem[INS_OFFSET+18]
-#define _ri0 mem[INS_OFFSET+19]
-#define _ri1 mem[INS_OFFSET+20]
-#define _v mem[INS_OFFSET+21]
-#define _flag mem[INS_OFFSET+22]
-#define _seed *(uint16_t*)(mem+INS_OFFSET+23)
+#define _ins2 mem[INS_OFFSET + 1]
+#define _ins1 mem[INS_OFFSET + 2]
+#define _ins0 mem[INS_OFFSET + 3]
+#define _ins *(uint16_t *)(mem + INS_OFFSET + 2)
+#define _insEx *(uint32_t *)(mem + INS_OFFSET)
+#define _code mem[INS_OFFSET + 4]
+#define _keycode mem[INS_OFFSET + 5]
+#define _lr mem[INS_OFFSET + 6]
+#define _direction mem[INS_OFFSET + 7]
+#define _addr *(uint16_t *)(mem + INS_OFFSET + 8)
+#define _stackindex mem[INS_OFFSET + 10]
+#define _callstackindex mem[INS_OFFSET + 11]
+#define _forstackindex mem[INS_OFFSET + 12]
+#define _report_echo mem[INS_OFFSET + 13]
+#define _e_set mem[INS_OFFSET + 14]
+#define _e_set_t mem[INS_OFFSET + 15]
+#define _e_val *(uint16_t *)(mem + INS_OFFSET + 16) // external argument for next instruction (used for dynamic for-loop, wait etc.)
+#define _script_running mem[INS_OFFSET + 18]
+#define _ri0 mem[INS_OFFSET + 19]
+#define _ri1 mem[INS_OFFSET + 20]
+#define _v mem[INS_OFFSET + 21]
+#define _flag mem[INS_OFFSET + 22]
+#define _seed *(uint16_t *)(mem + INS_OFFSET + 23)
 
 // timers declear
-extern volatile uint32_t timer_ms;                      // script timer
-extern volatile uint32_t wait_ms;                       // waiting counter
+extern volatile uint32_t timer_ms; // script timer
+extern volatile uint32_t wait_ms;  // waiting counter
 
 void ScriptInit(void);
 void Script_AutoStart(void);
@@ -108,7 +108,8 @@ void Script_Task(void);
 
 void Serial_Task(int16_t byte);
 
-inline void Increment_Timer(void) {
+inline void Increment_Timer(void)
+{
     // increment timer
     timer_ms++;
 }

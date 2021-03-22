@@ -11,17 +11,19 @@ volatile uint16_t systickmillis = 0;
 //    systickmillis++;
 //}
 
-inline void timer0_init(void) {
+inline void timer0_init(void)
+{
     // set prescaler to 64 and start the timer
-    TCCR0B |= (1 << CS01) | (1 << CS00);    // 16,000,000(F_CPU) / 64  = 250,000 Hz
+    TCCR0B |= (1 << CS01) | (1 << CS00); // 16,000,000(F_CPU) / 64  = 250,000 Hz
     TCNT0 = 6;
     TIMSK0 |= (1 << TOIE0); // Initialize timer0 interrupt
 }
 
-inline void timer1_init(void) {
+inline void timer1_init(void)
+{
     // ISR (TIMER1_COMPA_vect) ?
     // configurations for timer1
-    TCNT1 = 0;  // set counter to 0.
+    TCNT1 = 0; // set counter to 0.
     OCR1A = 15999;
     TCCR1B |= (1 << WGM12);  // use wave genreation
     TCCR1B |= (1 << CS10);   // use system clock

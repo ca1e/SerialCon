@@ -37,6 +37,7 @@
 #define _JOYSTICK_H_
 
 #include "Common.h"
+#include "Interrupt.h"
 #include "System.h"
 #include "HID.h"
 #include "EasyCon.h"
