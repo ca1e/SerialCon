@@ -14,6 +14,8 @@
 #define Max(a, b) ((a > b) ? (a) : (b))
 #define Min(a, b) ((a < b) ? (a) : (b))
 
+#define BADUD_RATE 9600
+
 #define LED_DURATION 50
 #define TurnOnLED LEDs_TurnOnLEDs
 #define TurnOffLED LEDs_TurnOffLEDs

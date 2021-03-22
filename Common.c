@@ -20,7 +20,7 @@ inline void enable_rx_isr(void)
 void CommonInit(void)
 {
     // Initialize serial port.
-    Serial_Init(115200, false);
+    Serial_Init(BADUD_RATE, false);
     enable_rx_isr();
     // Initialize LEDs.
     LEDs_Init();

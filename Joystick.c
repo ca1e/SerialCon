@@ -51,3 +51,19 @@ ISR(TIMER0_OVF_vect) // timer0 overflow interrupt ~1ms
 
     BlinkLEDTick();
 }
+
+ISR(PCINT0_vect)
+{
+    /* This is where you get when an interrupt is happening */
+    if(!read_bit(PINB, PB5))
+    {
+        if(isScriptRunning())
+        {
+            Script_Stop();
+        }
+        else
+        {
+            Script_Start();
+        }
+    }
+}

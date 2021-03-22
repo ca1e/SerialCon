@@ -31,7 +31,17 @@ void Decrement_Report_Echo(void)
         _report_echo = Max(0, _report_echo - 1);
     }
 }
-
+bool isScriptRunning(void)
+{
+    if(_script_running == 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 // Run script on startup.
 void Script_AutoStart(void)
 {
@@ -102,7 +112,6 @@ void Script_Start(void)
 
     StartRunningLED();
 }
-
 // Stop script.
 void Script_Stop(void)
 {

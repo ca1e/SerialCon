@@ -102,6 +102,7 @@ extern volatile uint32_t wait_ms;  // waiting counter
 
 void ScriptInit(void);
 void Script_AutoStart(void);
+bool isScriptRunning(void);
 void Script_Start(void);
 void Script_Stop(void);
 void Script_Task(void);
