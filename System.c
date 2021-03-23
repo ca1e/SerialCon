@@ -1,8 +1,5 @@
 #include "System.h"
 
-volatile uint8_t systick_ms = 0;
-volatile uint16_t systickmillis = 0;
-
 inline void timer0_init(void)
 {
     // set prescaler to 64 and start the timer

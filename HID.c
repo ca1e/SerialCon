@@ -1,7 +1,7 @@
 #include "HID.h"
 
 volatile uint8_t echo_ms = 0; // echo counter
-USB_JoystickReport_Input_t next_report;
+volatile USB_JoystickReport_Input_t next_report;
 
 // Reset report to default.
 void ResetReport(void)
@@ -13,14 +13,41 @@ void ResetReport(void)
   next_report.RY = STICK_CENTER;
   next_report.HAT = HAT_CENTER;
 }
+void SetButtons(const uint16_t Button)
+{
+  return;
+}
+void ReleaseButtons(const uint16_t Button)
+{
+  return;
+}
+void SetHAT(const uint8_t HAT)
+{
+  return;
+}
+void SetLeftStick(const uint8_t LX, const uint8_t LY)
+{
+  return;
+}
+void SetRightStick(const uint8_t RX, const uint8_t RY)
+{
+  return;
+}
 
-void HID_Init(void)
+void HIDInit(void)
 {
   ResetReport();
   USB_Init();
 }
 
-void HID_Task(void)
+void HIDTick(void)
+{
+	// decrement echo counter
+	if (echo_ms != 0)
+		echo_ms--;
+}
+
+void HIDTask(void)
 {
   // We need to run our task to process and deliver data for our IN and OUT endpoints.
   Report_Task();
@@ -79,6 +106,12 @@ void EVENT_USB_Device_ControlRequest(void)
   // Not used here, it looks like we don't receive control request from the Switch.
 }
 
+// Prepare the next report for the host.
+inline void GetNextReport(USB_JoystickReport_Input_t *const ReportData)
+{
+	memcpy(ReportData, &next_report, sizeof(USB_JoystickReport_Input_t));
+}
+
 // Process and deliver data from IN and OUT endpoints.
 void Report_Task(void)
 {
@@ -126,7 +159,6 @@ void Report_Task(void)
     // We then send an IN packet on this endpoint.
     Endpoint_ClearIN();
 */
-
       if (Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) == ENDPOINT_RWSTREAM_NoError)
       {
         // We then send an IN packet on this endpoint.

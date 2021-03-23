@@ -28,15 +28,15 @@ int main(void)
     // Initialize script.
     ScriptInit();
     // The USB stack should be initialized last.
-    HID_Init();
+    HIDInit();
     // Once that's done, we'll enter an infinite loop.
     while (1)
     {
         // codes here...
         // Process local script instructions.
-        Script_Task();
+        ScriptTask();
         // ApplicationTask();
-        HID_Task();
+        HIDTask();
     }
 }
 

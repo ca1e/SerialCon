@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "Common.h"
+#include "BoardInfs.h"
 
 #define EMEM_SIZE MEM_SIZE
 

@@ -66,29 +66,32 @@ typedef struct
 	uint8_t RY;		 // Right Stick Y
 } USB_JoystickReport_Output_t;
 
-extern USB_JoystickReport_Input_t next_report;
+extern volatile USB_JoystickReport_Input_t next_report;
 extern volatile uint8_t echo_ms;
 
-void HID_Init(void);
-void HID_Task(void);
+void HIDInit(void);
+void HIDTick(void);
+void HIDTask(void);
 
 void EVENT_USB_Device_Connect(void);
 void EVENT_USB_Device_Disconnect(void);
 void EVENT_USB_Device_ConfigurationChanged(void);
 void EVENT_USB_Device_ControlRequest(void);
-void Report_Task(void);
+
 void ResetReport(void);
 
-inline void HIDTick(void)
-{
-	// decrement echo counter
-	if (echo_ms != 0)
-		echo_ms--;
-}
-// Prepare the next report for the host.
-inline void GetNextReport(USB_JoystickReport_Input_t *const ReportData)
-{
-	memcpy(ReportData, &next_report, sizeof(USB_JoystickReport_Input_t));
-}
+#define ReportInputButton next_report.Button
+#define ReportInputHAT next_report.HAT
+#define ReportInputLX next_report.LX
+#define ReportInputLY next_report.LY
+#define ReportInputRX next_report.RX
+#define ReportInputRY next_report.RY
+
+void SetButtons(const uint16_t Button);
+void ReleaseButtons(const uint16_t Button);
+void SetHAT(const uint8_t HAT);
+void SetHAT(const uint8_t HAT);
+void SetLeftStick(const uint8_t LX, const uint8_t LY);
+void SetRightStick(const uint8_t RX, const uint8_t RY);
 
 #endif

@@ -17,37 +17,6 @@ bool auto_run = false;
 volatile uint32_t timer_ms = 0; // script timer
 volatile uint32_t wait_ms = 0;  // waiting counter
 
-void ScriptTick(void)
-{
-    // decrement waiting counter
-    if (wait_ms != 0 && (_report_echo == 0 || wait_ms > 1))
-        wait_ms--;
-}
-void Decrement_Report_Echo(void)
-{
-    // decrement echo counter
-    if (!_script_running || _report_echo > 0 || wait_ms < 2)
-    {
-        _report_echo = Max(0, _report_echo - 1);
-    }
-}
-bool isScriptRunning(void)
-{
-    if(_script_running == 1)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-// Run script on startup.
-void Script_AutoStart(void)
-{
-    if (auto_run)
-        Script_Start();
-}
 // Initialize script. Load static script into EEPROM if exists.
 void ScriptInit(void)
 {
@@ -91,6 +60,42 @@ void ScriptInit(void)
     // only if highest bit is 0
     auto_run = (EEP_Read_Byte((uint8_t *)1) >> 7) == 0;
 }
+
+void ScriptTick(void)
+{
+    // decrement waiting counter
+    if (wait_ms != 0 && (_report_echo == 0 || wait_ms > 1))
+        wait_ms--;
+}
+
+void Decrement_Report_Echo(void)
+{
+    // decrement echo counter
+    if (!_script_running || _report_echo > 0 || wait_ms < 2)
+    {
+        _report_echo = Max(0, _report_echo - 1);
+    }
+}
+
+bool isScriptRunning(void)
+{
+    if(_script_running == 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// Run script on startup.
+void Script_AutoStart(void)
+{
+    if (auto_run)
+        Script_Start();
+}
+
 // Run script.
 void Script_Start(void)
 {
@@ -112,6 +117,7 @@ void Script_Start(void)
 
     StartRunningLED();
 }
+
 // Stop script.
 void Script_Stop(void)
 {
@@ -124,8 +130,9 @@ void Script_Stop(void)
 
     StopRunningLED();
 }
+
 // Process script instructions.
-void Script_Task(void)
+void ScriptTask(void)
 {
     while (true)
     {
@@ -203,7 +210,7 @@ void Script_Task(void)
                 if ((_keycode & 0x10) == 0)
                 {
                     // Button
-                    ReportInputButton |= 1 << _keycode;
+                    ReportInputButton |= (1 << _keycode);
                     _report_echo = ECHO_TIMES;
                 }
                 else
@@ -694,6 +701,7 @@ void Script_Task(void)
         }
     }
 }
+
 // Perform binary operations by operator code
 void BinaryOp(uint8_t op, uint8_t reg, int16_t value)
 {
@@ -751,7 +759,7 @@ void Serial_Task(int16_t byte)
         {
             // all bytes received
             for (flash_index = 0; flash_index < flash_count; flash_index++, flash_addr++)
-                eeprom_write_byte(flash_addr, SERIAL_BUFFER(flash_index));
+                EEP_Write_Byte(flash_addr, SERIAL_BUFFER(flash_index));
             Serial_Send(REPLY_FLASHEND);
         }
     }

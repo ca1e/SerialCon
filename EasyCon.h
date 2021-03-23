@@ -6,18 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "EEPROM.h"
 #include "Common.h"
-
+#include "EEPROM.h"
 #include "HID.h"
-#define ReportInputButton next_report.Button
-#define ReportInputHAT next_report.HAT
-
-#define ReportInputLX next_report.LX
-#define ReportInputLY next_report.LY
-
-#define ReportInputRX next_report.RX
-#define ReportInputRY next_report.RY
 
 // constants
 #define VERSION 0x45
@@ -101,11 +92,13 @@ extern volatile uint32_t timer_ms; // script timer
 extern volatile uint32_t wait_ms;  // waiting counter
 
 void ScriptInit(void);
+void ScriptTick(void);
+void ScriptTask(void);
+
 void Script_AutoStart(void);
 bool isScriptRunning(void);
 void Script_Start(void);
 void Script_Stop(void);
-void Script_Task(void);
 
 void Serial_Task(int16_t byte);
 
@@ -114,7 +107,6 @@ inline void Increment_Timer(void)
     // increment timer
     timer_ms++;
 }
-void ScriptTick(void);
 void Decrement_Report_Echo(void);
 void BinaryOp(uint8_t op, uint8_t reg, int16_t value);
 
