@@ -4,13 +4,6 @@ LUFA_PATH    = ./lufa/LUFA
 include $(LUFA_PATH)/Build/lufa_core.mk
 
 $(call ERROR_IF_EMPTY, REAL_BOARD)
-$(call ERROR_IF_EMPTY, MEM_SIZE)
-$(call ERROR_IF_EMPTY, LEDMASK_TX)
-$(call ERROR_IF_EMPTY, LEDMASK_RX)
-
-SETTINGS	+= -DLEDMASK_TX=$(LEDMASK_TX)
-SETTINGS	+= -DLEDMASK_RX=$(LEDMASK_RX)
-SETTINGS	+= -DMEM_SIZE=$(MEM_SIZE)
 
 MCU          ?= atmega32u4
 ARCH         := AVR8
@@ -23,7 +16,7 @@ SRC          += Joystick.c LUFADescriptors.c
 SRC		 	 += HID.c System.c Common.c
 SRC		 	 += EasyCon.c
 SRC			 += $(LUFA_SRC_USB)
-CC_FLAGS     := -DUSE_LUFA_CONFIG_HEADER -IConfig $(SETTINGS)
+CC_FLAGS     := -DUSE_LUFA_CONFIG_HEADER -IConfig
 LD_FLAGS     :=
 
 # Default target

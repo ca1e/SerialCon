@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "Common.h"
+
 #define EMEM_SIZE MEM_SIZE
 
 // (uint8_t)

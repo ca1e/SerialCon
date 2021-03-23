@@ -7,7 +7,7 @@
 #define reset_bit(r,b) ((r) &= ~(1u << (b)))
 #define set_bit(r,b) ((r) |= (1u << (b)))
 
-inline void PCIInit(void)
+static inline void PCIInit(void)
 {
     /*Assumes that you are using PCINT0.
      *It is also known as PB0
