@@ -66,8 +66,8 @@ typedef struct
 	uint8_t RY;		 // Right Stick Y
 } USB_JoystickReport_Output_t;
 
-extern volatile USB_JoystickReport_Input_t next_report;
-extern volatile uint8_t echo_ms;
+//extern volatile USB_JoystickReport_Input_t next_report;
+//extern volatile uint8_t echo_ms;
 
 void HIDInit(void);
 void HIDTick(void);
@@ -78,19 +78,12 @@ void EVENT_USB_Device_Disconnect(void);
 void EVENT_USB_Device_ConfigurationChanged(void);
 void EVENT_USB_Device_ControlRequest(void);
 
+void ZeroEcho(void);
 void ResetReport(void);
-
-#define ReportInputButton next_report.Button
-#define ReportInputHAT next_report.HAT
-#define ReportInputLX next_report.LX
-#define ReportInputLY next_report.LY
-#define ReportInputRX next_report.RX
-#define ReportInputRY next_report.RY
-
 void SetButtons(const uint16_t Button);
+void PressButtons(const uint16_t Button);
 void ReleaseButtons(const uint16_t Button);
-void SetHAT(const uint8_t HAT);
-void SetHAT(const uint8_t HAT);
+void SetHATSwitch(const uint8_t HAT);
 void SetLeftStick(const uint8_t LX, const uint8_t LY);
 void SetRightStick(const uint8_t RX, const uint8_t RY);
 

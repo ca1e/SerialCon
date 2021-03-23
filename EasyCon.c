@@ -107,7 +107,7 @@ void Script_Start(void)
     // reset variables
     wait_ms = 0;
     ///////////////////////////
-    echo_ms = 0;
+    ZeroEcho();
     ///////////////////////////
     timer_ms = 0;
     tail_wait = 0;
@@ -155,27 +155,25 @@ void ScriptTask(void)
                     if (i == 32)
                     {
                         // LS
-                        ReportInputLX = STICK_CENTER;
-                        ReportInputLY = STICK_CENTER;
+                        SetLeftStick(STICK_CENTER, STICK_CENTER);
                         _report_echo = ECHO_TIMES;
                     }
                     else if (i == 33)
                     {
                         // RS
-                        ReportInputRX = STICK_CENTER;
-                        ReportInputRY = STICK_CENTER;
+                        SetRightStick(STICK_CENTER, STICK_CENTER);
                         _report_echo = ECHO_TIMES;
                     }
                     else if ((i & 0x10) == 0)
                     {
                         // Button
-                        ReportInputButton &= ~(1 << i);
+                        ReleaseButtons(_BV(i));
                         _report_echo = ECHO_TIMES;
                     }
                     else
                     {
                         // HAT
-                        ReportInputHAT = HAT_CENTER;
+                        SetHATSwitch(HAT_CENTER);
                         _report_echo = ECHO_TIMES;
                     }
                 }
@@ -210,13 +208,13 @@ void ScriptTask(void)
                 if ((_keycode & 0x10) == 0)
                 {
                     // Button
-                    ReportInputButton |= (1 << _keycode);
+                    PressButtons(_BV(_keycode));
                     _report_echo = ECHO_TIMES;
                 }
                 else
                 {
                     // HAT
-                    ReportInputHAT = _keycode & 0xF;
+                    SetHATSwitch(_keycode & 0xF);
                     _report_echo = ECHO_TIMES;
                 }
                 // post effect
@@ -261,15 +259,13 @@ void ScriptTask(void)
                 if (_lr)
                 {
                     // RS
-                    ReportInputRX = DX(_direction);
-                    ReportInputRY = DY(_direction);
+                    SetRightStick(DX(_direction), DY(_direction));
                     _report_echo = ECHO_TIMES;
                 }
                 else
                 {
                     // LS
-                    ReportInputLX = DX(_direction);
-                    ReportInputLY = DY(_direction);
+                    SetLeftStick( DX(_direction), DY(_direction));
                     _report_echo = ECHO_TIMES;
                 }
                 // post effect
@@ -786,12 +782,12 @@ void Serial_Task(int16_t byte)
                 else
                 {
                     //memset(&next_report, 0, sizeof(USB_JoystickReport_Input_t));
-                    ReportInputButton = (SERIAL_BUFFER(0) << 9) | (SERIAL_BUFFER(1) << 2) | (SERIAL_BUFFER(2) >> 5);
-                    ReportInputHAT = (uint8_t)((SERIAL_BUFFER(2) << 3) | (SERIAL_BUFFER(3) >> 4));
-                    ReportInputLX = (uint8_t)((SERIAL_BUFFER(3) << 4) | (SERIAL_BUFFER(4) >> 3));
-                    ReportInputLY = (uint8_t)((SERIAL_BUFFER(4) << 5) | (SERIAL_BUFFER(5) >> 2));
-                    ReportInputRX = (uint8_t)((SERIAL_BUFFER(5) << 6) | (SERIAL_BUFFER(6) >> 1));
-                    ReportInputRY = (uint8_t)((SERIAL_BUFFER(6) << 7) | (SERIAL_BUFFER(7) & 0x7f));
+                    SetButtons( (SERIAL_BUFFER(0) << 9) | (SERIAL_BUFFER(1) << 2) | (SERIAL_BUFFER(2) >> 5) );
+                    SetHATSwitch( (uint8_t)((SERIAL_BUFFER(2) << 3) | (SERIAL_BUFFER(3) >> 4)) );
+                    SetLeftStick( (uint8_t)((SERIAL_BUFFER(3) << 4) | (SERIAL_BUFFER(4) >> 3)),
+                                    (uint8_t)((SERIAL_BUFFER(4) << 5) | (SERIAL_BUFFER(5) >> 2)));
+                    SetRightStick( (uint8_t)((SERIAL_BUFFER(5) << 6) | (SERIAL_BUFFER(6) >> 1)),
+                                    (uint8_t)((SERIAL_BUFFER(6) << 7) | (SERIAL_BUFFER(7) & 0x7f)));
                     // set flag
                     _report_echo = ECHO_TIMES;
                     // send ACK

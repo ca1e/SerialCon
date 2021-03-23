@@ -1,8 +1,12 @@
 #include "HID.h"
 
 volatile uint8_t echo_ms = 0; // echo counter
-volatile USB_JoystickReport_Input_t next_report;
+USB_JoystickReport_Input_t next_report;
 
+void ZeroEcho(void)
+{
+  echo_ms = 0;
+}
 // Reset report to default.
 void ResetReport(void)
 {
@@ -13,25 +17,17 @@ void ResetReport(void)
   next_report.RY = STICK_CENTER;
   next_report.HAT = HAT_CENTER;
 }
-void SetButtons(const uint16_t Button)
-{
-  return;
-}
-void ReleaseButtons(const uint16_t Button)
-{
-  return;
-}
-void SetHAT(const uint8_t HAT)
-{
-  return;
-}
+void SetButtons(const uint16_t Button) {next_report.Button = Button;}
+void PressButtons(const uint16_t Button) {next_report.Button |= Button;}
+void ReleaseButtons(const uint16_t Button) {next_report.Button &= ~(Button);}
+void SetHATSwitch(const uint8_t HAT) {next_report.HAT = HAT;}
 void SetLeftStick(const uint8_t LX, const uint8_t LY)
 {
-  return;
+  next_report.LX = LX; next_report.LY = LY;
 }
 void SetRightStick(const uint8_t RX, const uint8_t RY)
 {
-  return;
+  next_report.RX = RX; next_report.RY = RY;
 }
 
 void HIDInit(void)
