@@ -9,17 +9,14 @@
 
 static inline void PCIInit(void)
 {
-    /*Assumes that you are using PCINT0.
-     *It is also known as PB0
-     */
     // pinMode(PB0, INPUT_PULLUP);
     reset_bit(DDRB, PB5);
-    // DDRB &= ~(1 << PB0); /* Set PB0 as input */
+    /* Set PB5 as input */
     set_bit(PORTB, PB5);
-    // PORTB |= (1 << PB0); /* Activate PULL UP resistor */
-    PCMSK0 |= (1 << PCINT5); /* Enable PCINT5 */
+    /* Activate PULL UP resistor */
+    PCMSK0 |= _BV(PCINT5); /* Enable PCINT5 */
     // Activate PCINT7-0
-    PCICR |= (1 << PCIE0);   /* Activate interrupt on enabled PCINT7-0 */
+    PCICR |= _BV(PCIE0);   /* Activate interrupt on enabled PCINT7-0 */
 }
 
 #endif

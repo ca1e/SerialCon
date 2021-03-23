@@ -2,11 +2,6 @@
 
 volatile uint8_t led_ms = 0; // transmission LED countdown
 
-ISR(USART1_RX_vect)
-{
-    Serial_Task(Serial_ReceiveByte());
-}
-
 inline void disable_rx_isr(void)
 {
     UCSR1B &= ~_BV(RXCIE1);
