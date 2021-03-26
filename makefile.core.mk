@@ -7,10 +7,10 @@ $(call ERROR_IF_EMPTY, REAL_BOARD)
 
 # BOARD        := LEONARDO
 
-ifeq($(REAL_BOARD),UNO)
+ifeq ($(REAL_BOARD),UNO)
   MCU		  = atmega16u2
 endif
-ifeq($(REAL_BOARD),TEENSY2pp)
+ifeq  ($(REAL_BOARD),TEENSY2pp)
   MCU		  = at90usb1286
 endif
 

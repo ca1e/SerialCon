@@ -1,5 +1,4 @@
-#ifndef _INTERRUPTS_H_
-#define _INTERRUPTS_H_
+#pragma once
 
 #include <avr/interrupt.h>
 
@@ -18,5 +17,3 @@ static inline void PCIInit(void)
     // Activate PCINT7-0
     PCICR |= _BV(PCIE0);   /* Activate interrupt on enabled PCINT7-0 */
 }
-
-#endif

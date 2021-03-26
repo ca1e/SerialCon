@@ -1,5 +1,4 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#pragma once
 
 #include <avr/io.h>
 #include <avr/wdt.h>
@@ -12,5 +11,3 @@
 #include <LUFA/Common/Common.h>
 
 void SystemInit(void);
-
-#endif

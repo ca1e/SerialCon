@@ -33,13 +33,10 @@
  *  Header file for Joystick.c.
  */
 
-#ifndef _JOYSTICK_H_
-#define _JOYSTICK_H_
+#pragma once
 
 #include "Common.h"
 #include "Interrupt.h"
 #include "System.h"
 #include "HID.h"
 #include "EasyCon.h"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _COMMON_H
-#define _COMMON_H
+#pragma once
 
 #include <LUFA/Drivers/Board/LEDs.h>
 #include <LUFA/Drivers/Peripheral/Serial.h>
@@ -27,5 +26,3 @@ void Serial_Send(const char DataByte);
 
 static inline void StartRunningLED(void) { LEDs_TurnOnLEDs(LEDMASK_RX); }
 static inline void StopRunningLED(void) { LEDs_TurnOffLEDs(LEDMASK_RX); }
-
-#endif

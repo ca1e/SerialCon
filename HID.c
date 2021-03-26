@@ -43,6 +43,7 @@ void HIDTick(void)
 		echo_ms--;
 }
 
+void Report_Task(void);
 void HIDTask(void)
 {
   // We need to run our task to process and deliver data for our IN and OUT endpoints.

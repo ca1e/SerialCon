@@ -1,5 +1,4 @@
-#ifndef _MEM_EEPROM_H_
-#define _MEM_EEPROM_H_
+#pragma once
 
 #include <avr/eeprom.h>
 
@@ -16,5 +15,3 @@
 // (uint16_t)
 #define EEP_Write_Word eeprom_write_word
 #define EEP_Read_Word eeprom_read_word
-
-#endif
