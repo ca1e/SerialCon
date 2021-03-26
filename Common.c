@@ -24,7 +24,7 @@ void CommonInit(void)
 void BlinkLED(void)
 {
     led_ms = LED_DURATION;
-    TurnOnLED(LEDMASK_TX);
+    LEDs_TurnOnLEDs(LEDMASK_TX);
 }
 void BlinkLEDTick(void)
 {
@@ -33,7 +33,7 @@ void BlinkLEDTick(void)
     {
         led_ms--;
         if (led_ms == 0)
-            TurnOffLED(LEDMASK_TX);
+            LEDs_TurnOffLEDs(LEDMASK_TX);
     }
 }
 

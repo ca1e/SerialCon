@@ -5,9 +5,17 @@ include $(LUFA_PATH)/Build/lufa_core.mk
 
 $(call ERROR_IF_EMPTY, REAL_BOARD)
 
+# BOARD        := LEONARDO
+
+ifeq($(REAL_BOARD),UNO)
+  MCU		  = atmega16u2
+endif
+ifeq($(REAL_BOARD),TEENSY2pp)
+  MCU		  = at90usb1286
+endif
+
 MCU          ?= atmega32u4
 ARCH         := AVR8
-BOARD        := LEONARDO
 F_CPU        := 16000000
 F_USB        := $(F_CPU)
 OPTIMIZATION := s
@@ -33,7 +41,7 @@ include $(LUFA_PATH)/Build/lufa_cppcheck.mk
 # include $(LUFA_PATH)/Build/lufa_doxygen.mk
 # include $(LUFA_PATH)/Build/lufa_dfu.mk
 include $(LUFA_PATH)/Build/lufa_hid.mk
-# include $(LUFA_PATH)/Build/lufa_avrdude.mk
+include $(LUFA_PATH)/Build/lufa_avrdude.mk
 # include $(LUFA_PATH)/Build/lufa_atprogram.mk
 
 .PHONY:mkdir

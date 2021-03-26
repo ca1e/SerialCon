@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "BoardInfs.h"
+#include "ubda/binfos.h"
 
 #define EMEM_SIZE MEM_SIZE
 

@@ -1,5 +1,4 @@
-#ifndef __BOARD_INF_H__
-#define __BOARD_INF_H__
+#pragma once
 
 #if (REAL_BOARD == Leonardo)
     #define DEFAULT_BOARD
@@ -23,6 +22,4 @@
 #endif
 #if !defined(LEDMASK_RX)
     #define LEDMASK_RX      LEDS_LED1
-#endif
-
 #endif

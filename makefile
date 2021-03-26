@@ -20,14 +20,12 @@ BOARD        := LEONARDO
 #BOARD        := LEONARDO
 
 #REAL_BOARD   := UNO
-#MCU          := atmega16u2
 #BOARD        := UNO
 
 #REAL_BOARD   := Teensy2
 #BOARD        := TEENSY2
 
 #REAL_BOARD   := TEENSY2pp
-#MCU          := at90usb1286
 #BOARD        := TEENSY2
 
 #ifeq($(CC),gcc)

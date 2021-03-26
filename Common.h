@@ -4,7 +4,7 @@
 #include <LUFA/Drivers/Board/LEDs.h>
 #include <LUFA/Drivers/Peripheral/Serial.h>
 
-#include "BoardInfs.h"
+#include "ubda/binfos.h"
 #include "EasyCon.h"
 // Start script.
 #define Device_Connected Script_AutoStart
@@ -25,7 +25,7 @@ void BlinkLED(void);
 void BlinkLEDTick(void);
 void Serial_Send(const char DataByte);
 
-static inline void StartRunningLED(void) { TurnOnLED(LEDMASK_RX); }
-static inline void StopRunningLED(void) { TurnOffLED(LEDMASK_RX); }
+static inline void StartRunningLED(void) { LEDs_TurnOnLEDs(LEDMASK_RX); }
+static inline void StopRunningLED(void) { LEDs_TurnOffLEDs(LEDMASK_RX); }
 
 #endif
