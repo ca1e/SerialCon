@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BINFOS_H
+#define _BINFOS_H
 
 #if (REAL_BOARD == Leonardo)
     #define DEFAULT_BOARD
@@ -22,4 +23,6 @@
 #endif
 #if !defined(LEDMASK_RX)
     #define LEDMASK_RX      LEDS_LED1
+#endif
+
 #endif
